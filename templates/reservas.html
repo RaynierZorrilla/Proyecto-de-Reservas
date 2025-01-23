@@ -6,11 +6,10 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="container">
+    <div class="container text-center">
         <h1>Lista de Reservas</h1>
-        
-        <table class="table table-bordered table-striped">
-            <thead class="thead-dark">
+        <table class="table table-bordered mt-4">
+            <thead>
                 <tr>
                     <th>ID</th>
                     <th>Nombre</th>
@@ -20,6 +19,7 @@
                     <th>Teléfono</th>
                     <th>Email</th>
                     <th>Detalles</th>
+                    <th>Acción</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,13 +33,15 @@
                     <td>{{ reserva[5] }}</td>
                     <td>{{ reserva[6] }}</td>
                     <td>{{ reserva[7] }}</td>
+                    <td>
+                        <!-- Botón para eliminar -->
+                        <a href="{{ url_for('eliminar_reserva', id=reserva[0]) }}" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar esta reserva?')">Eliminar</a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-
         <a href="{{ url_for('reservar') }}" class="btn btn-primary">Hacer una Reserva</a>
-        <a href="{{ url_for('index') }}" class="btn btn-secondary">Volver al Inicio</a>
     </div>
 </body>
 </html>

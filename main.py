@@ -68,6 +68,18 @@ def reservas():
     # Renderizar la lista de reservas
     return render_template('reservas.html', reservas=reservas)
 
+# Ruta para eliminar una reserva
+@app.route('/reserva_reserva/<int:id>', methods=['GET', 'POST'])
+def eliminar_reserva(id):
+    conn = sqlite3.connect('reservas.db')
+    cursor = conn.cursor()
+
+    # Eliminar la reserva con el ID proporcionado
+    cursor.execute('DELETE FROM reservas WHERE id = ?', (id,))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('reservas'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)
