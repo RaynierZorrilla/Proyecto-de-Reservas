@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reservas</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Lista de Reservas</h1>
+        
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Teléfono</th>
+                    <th>Email</th>
+                    <th>Detalles</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reserva in reservas %}
+                <tr>
+                    <td>{{ reserva[0] }}</td>
+                    <td>{{ reserva[1] }}</td>
+                    <td>{{ reserva[2] }}</td>
+                    <td>{{ reserva[3] }}</td>
+                    <td>{{ reserva[4] }}</td>
+                    <td>{{ reserva[5] }}</td>
+                    <td>{{ reserva[6] }}</td>
+                    <td>{{ reserva[7] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ url_for('reservar') }}" class="btn btn-primary">Hacer una Reserva</a>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">Volver al Inicio</a>
+    </div>
+</body>
+</html>

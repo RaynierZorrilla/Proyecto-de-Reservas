@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Inicio</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body class="d-flex align-items-center" style="height: 100vh;">
+    <div class="container text-center w-100">
+        <h1>Bienvenido al Sistema de Reservas</h1>
+        <div class="mt-4">
+            <a href="{{ url_for('reservar') }}" class="btn btn-primary">Hacer una Reserva</a>
+            <a href="{{ url_for('reservas') }}" class="btn btn-info">Ver Reservas</a>
+        </div>
+    </div>
+  </body>
+</html>
