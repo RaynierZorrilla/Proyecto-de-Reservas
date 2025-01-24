@@ -5,6 +5,7 @@ body {
     color: #ecf0f1; /* Color de texto claro */
     margin: 0;
     padding: 0;
+    
 }
 
 /* Contenedor principal */
@@ -25,6 +26,7 @@ h1 {
     margin-bottom: 30px;
     text-transform: uppercase;
     letter-spacing: 2px;
+    font-weight: bold;
 }
 
 /* Estilo de enlaces */
@@ -136,4 +138,9 @@ button, a.table-link {
 
 button:hover, a.table-link:hover {
     background-color: #1abc9c; /* Verde brillante al pasar el ratón */
+}
+
+.card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
 }

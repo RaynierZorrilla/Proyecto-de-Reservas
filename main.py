@@ -1,5 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 import sqlite3
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 
 app = Flask(__name__)
@@ -9,7 +11,12 @@ app.secret_key = 'supersecretkey'  # Necesario para usar sesiones y flash messag
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    if 'user_id' not in session:
+        flash('Por favor, inicia sesión para acceder a esta página.', 'warning')
+        return redirect(url_for('login'))
+
+    return render_template('index.html', username=session['username'])
+
 
 # Ruta para crear una nueva reserva
 @app.route('/reserva', methods=['GET', 'POST'])
@@ -79,6 +86,58 @@ def eliminar_reserva(id):
     conn.commit()
     conn.close()
     return redirect(url_for('reservas'))
+
+# Ruta para el registro de usuarios
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        hashed_password = generate_password_hash(password)
+
+        conn = sqlite3.connect('reservas.db')
+        cursor = conn.cursor()
+        try:
+            cursor.execute('INSERT INTO usuarios (username, password) VALUES (?, ?)', (username, hashed_password))
+            conn.commit()
+            flash('Usuario registrado exitosamente. Ahora puedes iniciar sesión.', 'success')
+            return redirect(url_for('login'))
+        except sqlite3.IntegrityError:
+            flash('El nombre de usuario ya está en uso. Intenta con otro.', 'danger')
+        conn.close()
+
+    return render_template('register.html')
+
+# Ruta para el inicio de sesión
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        conn = sqlite3.connect('reservas.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM usuarios WHERE username = ?', (username,))
+        user = cursor.fetchone()
+        conn.close()
+
+        if user and check_password_hash(user[2], password):
+            session['user_id'] = user[0]
+            session['username'] = user[1]
+            flash('Inicio de sesión exitoso.', 'success')
+            return redirect(url_for('index'))
+        else:
+            flash('Nombre de usuario o contraseña incorrectos.', 'danger')
+
+    return render_template('login.html')
+
+# Ruta para cerrar sesión
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    session.pop('username', None)
+    flash('Has cerrado sesión exitosamente.', 'success')
+    return redirect(url_for('login'))
 
 
 if __name__ == '__main__':
