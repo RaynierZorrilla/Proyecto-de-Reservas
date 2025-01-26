@@ -9,6 +9,21 @@
     <div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
         <div class="card p-4" style="width: 100%; max-width: 400px;">
             <h2 class="text-center mb-4 text-dark">Registro</h2>
+            
+            <!-- Mensaje de error -->
+            {% if error %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <!-- Mensaje de éxito -->
+            {% if success %}
+            <div class="alert alert-success" role="alert">
+                {{ success }}
+            </div>
+            {% endif %}
+
             <form method="POST" action="{{ url_for('register') }}">
                 <div class="form-group">
                     <label for="username" class="text-dark">Usuario</label>

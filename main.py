@@ -87,26 +87,41 @@ def eliminar_reserva(id):
     conn.close()
     return redirect(url_for('reservas'))
 
-# Ruta para el registro de usuarios
+#Ruta para registrar un nuevo usuario
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        hashed_password = generate_password_hash(password)
+        confirm_password = request.form['confirm_password']
 
+        # Verificar si las contraseñas coinciden
+        if password != confirm_password:
+            error = 'Las contraseñas no coinciden.'
+            return render_template('register.html', error=error)
+
+        # Verificar si el usuario ya existe
         conn = sqlite3.connect('reservas.db')
         cursor = conn.cursor()
-        try:
-            cursor.execute('INSERT INTO usuarios (username, password) VALUES (?, ?)', (username, hashed_password))
-            conn.commit()
-            flash('Usuario registrado exitosamente. Ahora puedes iniciar sesión.', 'success')
-            return redirect(url_for('login'))
-        except sqlite3.IntegrityError:
-            flash('El nombre de usuario ya está en uso. Intenta con otro.', 'danger')
+        cursor.execute('SELECT * FROM usuarios WHERE username = ?', (username,))
+        existing_user = cursor.fetchone()
+
+        if existing_user:
+            conn.close()
+            error = 'El nombre de usuario ya existe. Por favor, elige otro.'
+            return render_template('register.html', error=error)
+
+        # Si el usuario no existe, registrarlo
+        hashed_password = generate_password_hash(password)
+        cursor.execute('INSERT INTO usuarios (username, password) VALUES (?, ?)', (username, hashed_password))
+        conn.commit()
         conn.close()
 
+        success = 'Usuario registrado exitosamente. Ahora puedes iniciar sesión.'
+        return render_template('register.html', success=success)
+
     return render_template('register.html')
+
 
 # Ruta para el inicio de sesión
 @app.route('/login', methods=['GET', 'POST'])

@@ -9,6 +9,23 @@
     <div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
         <div class="card p-4" style="width: 100%; max-width: 400px;">
             <h2 class="text-center mb-4 text-dark">Iniciar Sesión</h2>
+            
+            <!-- Mensajes flash -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div>
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+            
             <form method="POST" action="{{ url_for('login') }}">
                 <div class="form-group">
                     <label for="username" class="text-dark">Usuario</label>
@@ -25,5 +42,9 @@
             </form>
         </div>
     </div>
+    
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 </html>
